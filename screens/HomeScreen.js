@@ -1,19 +1,38 @@
 import * as WebBrowser from 'expo-web-browser';
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Image,
   Platform,
   ScrollView,
   StyleSheet,
   Text,
+  TextInput,
   TouchableOpacity,
   View,
+  FlatList,
 } from 'react-native';
+import ReminderItem from '../components/ReminderItem';
+import ReminderInput from '../components/ReminderInput';
 
 import { MonoText } from '../components/StyledText';
 import { Card, List, ListItem, Button, Icon } from 'react-native-elements';
 
 export default function HomeScreen() {
+  const [listReminders, setReminders] = useState([]);
+
+  const createReminderHandler = reminderTitle => {
+    setReminders(currentReminders => [
+      ...currentReminders, 
+      { id: Math.random().toString(), value: reminderTitle}
+    ]);
+  };
+
+  const removeReminderHandler = reminderId => {
+    setReminders(currentReminders => {
+      return currentReminders.filter((reminder) => reminder.id !== reminderId);
+    });
+  }
+
   return (
     <View style={styles.container}>
       <ScrollView
@@ -33,14 +52,21 @@ export default function HomeScreen() {
         <View style={styles.getStartedContainer}>
 
           <Text style={styles.getStartedText}>
-            Get started by clicking {"\n"}
+            Get started by typing a reminder title {"\n"}
           </Text>
+          <ReminderInput onCreateReminder={createReminderHandler} />
+          <FlatList 
+            keyExtractor={(item, index) => item.id}
+            data ={listReminders}
+            renderItem={itemData => (
+              <ReminderItem 
+                id={itemData.item.id}
+                title={itemData.item.value}
+                onDelete={removeReminderHandler} 
+              />
+            )}
+          />
 
-          <Button
-            onPress={createReminder}
-            title="Create Reminder"
-            color="black"
-          />  
 
           <Text style={styles.getStartedText}>
             {"\n"} Below you will see the reminders sorted by date
@@ -63,6 +89,8 @@ HomeScreen.navigationOptions = {
 function createReminder() {
   alert("Dummy create reminder");
 }
+
+
 
 // name on top, when and what in  the bottom
 const reminderList = [
@@ -112,6 +140,10 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
+  },
+  reminderInputField: {
+    borderColor: 'black',
+    borderWidth: 1,
   },
   developmentModeText: {
     marginBottom: 20,

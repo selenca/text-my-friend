@@ -25,14 +25,26 @@ const ReminderInput = props => {
 		<TextInput
             style={styles.reminderInputField} 
             placeholder='Reminder Title'
-            onChange={reminderInputHanlder}
+            onChangeText={(text)=>{ 
+              setEnteredReminder({ 
+                "reTitle": text,
+                "reDescription": enteredReminder.reDescription
+              })
+            }}
             name="reTitle"
             value={enteredReminder.reTitle}
         />
         <TextInput
             style={styles.reminderInputField} 
             placeholder='Reminder Description'
-            onChange={reminderInputHanlder}
+            onChangeText={
+              (text)=>{ 
+                setEnteredReminder({ 
+                  "reTitle": enteredReminder.reTitle,
+                  "reDescription": text
+                })
+              }
+            }
             name="reDescription"
             value={enteredReminder.reDescription}
         />

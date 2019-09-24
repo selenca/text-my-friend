@@ -20,10 +20,14 @@ import { Card, List, ListItem, Button, Icon } from 'react-native-elements';
 export default function HomeScreen() {
   const [listReminders, setReminders] = useState([]);
 
-  const createReminderHandler = reminderTitle => {
+  const createReminderHandler = (reminder) => {
     setReminders(currentReminders => [
       ...currentReminders, 
-      { id: Math.random().toString(), value: reminderTitle}
+      { 
+        id: Math.random().toString(),
+        reTitle: reminder.reTitle,
+        reDescription: reminder.reDescription
+      }
     ]);
   };
 
@@ -61,19 +65,17 @@ export default function HomeScreen() {
             renderItem={itemData => (
               <ReminderItem 
                 id={itemData.item.id}
-                title={itemData.item.value}
+                reTitle={itemData.item.reTitle}
+                reDescription={itemData.item.reDescription}
                 onDelete={removeReminderHandler} 
               />
             )}
           />
 
-
           <Text style={styles.getStartedText}>
             {"\n"} Below you will see the reminders sorted by date
           </Text>
-
           <RenderReminderList />
-
         </View>
 
       </ScrollView>

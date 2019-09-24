@@ -3,9 +3,21 @@ import { View, Text, StyleSheet, TextInput, Button } from 'react-native';
 
 const ReminderInput = props => {
 
-  const [enteredReminder, setEnteredReminder] = useState('');
-  const reminderInputHanlder = (enteredText) => {
-    setEnteredReminder(enteredText);
+  const [enteredReminder, setEnteredReminder] = useState({
+  	reTitle: 'j',
+  	reDescription: 'b',
+  });
+ 
+  const printValues = e => {
+    e.preventDefault();
+    console.log(e);
+    console.log(enteredReminder.reTitle, enteredReminder.reDescription);
+  };
+
+  const reminderInputHanlder = e => {
+	setEnteredReminder({ 
+	  [e.target.name]: e.target.value
+	});
   };
 
 	return ( 
@@ -13,8 +25,16 @@ const ReminderInput = props => {
 		<TextInput
             style={styles.reminderInputField} 
             placeholder='Reminder Title'
-            onChangeText={reminderInputHanlder}
-            value={enteredReminder}
+            onChange={reminderInputHanlder}
+            name="reTitle"
+            value={enteredReminder.reTitle}
+        />
+        <TextInput
+            style={styles.reminderInputField} 
+            placeholder='Reminder Description'
+            onChange={reminderInputHanlder}
+            name="reDescription"
+            value={enteredReminder.reDescription}
         />
         <Button 
         	title="Create Reminder" 

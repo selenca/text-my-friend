@@ -8,7 +8,7 @@ const ReminderItem = props => {
 			activeOpacity={0.8}
 		>
 			<View>
-		    	<Text styles={styles.reminderItemField}>{"\n"}{props.reTitle};{props.reDescription}</Text>
+		    	<Text styles={styles.reminderItemField}>{"\n"}{props.title};{props.description}</Text>
 	  		</View>
   		</TouchableOpacity>
   	);

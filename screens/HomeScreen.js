@@ -19,16 +19,19 @@ import { Card, List, ListItem, Button, Icon } from 'react-native-elements';
 
 export default function HomeScreen() {
   const [listReminders, setReminders] = useState([]);
+  const [isAddMode, setIsAddMode] = useState(false);
+
 
   const createReminderHandler = (reminder) => {
     setReminders(currentReminders => [
       ...currentReminders, 
       { 
         id: Math.random().toString(),
-        reTitle: reminder.reTitle,
-        reDescription: reminder.reDescription
+        title: reminder.title,
+        description: reminder.description
       }
     ]);
+    setIsAddMode(false);
   };
 
   const removeReminderHandler = reminderId => {
@@ -37,49 +40,40 @@ export default function HomeScreen() {
     });
   }
 
+  const cancelAddReminderHandler = () => {
+    setIsAddMode(false);
+  };
+
   return (
     <View style={styles.container}>
       <ScrollView
         style={styles.container}
         contentContainerStyle={styles.contentContainer}>
-        <View style={styles.welcomeContainer}>
-          <Image
-            source={
-              __DEV__
-                ? require('../assets/images/robot-dev.png')
-                : require('../assets/images/robot-prod.png')
-            }
-            style={styles.welcomeImage}
-          />
-        </View>
-
         <View style={styles.getStartedContainer}>
 
           <Text style={styles.getStartedText}>
             Get started by typing a reminder title {"\n"}
           </Text>
-          <ReminderInput onCreateReminder={createReminderHandler} />
+          <Button title="Add new Reminder" onPress={() => setIsAddMode(true)} />
+          <ReminderInput visible={isAddMode} onAddReminder={createReminderHandler} onCancel={cancelAddReminderHandler}/>
           <FlatList 
             keyExtractor={(item, index) => item.id}
             data ={listReminders}
             renderItem={itemData => (
               <ReminderItem 
                 id={itemData.item.id}
-                reTitle={itemData.item.reTitle}
-                reDescription={itemData.item.reDescription}
+                title={itemData.item.title}
+                description={itemData.item.description}
                 onDelete={removeReminderHandler} 
               />
             )}
           />
-
           <Text style={styles.getStartedText}>
             {"\n"} Below you will see the reminders sorted by date
           </Text>
           <RenderReminderList />
         </View>
-
       </ScrollView>
-
     </View>
   );
 }
@@ -87,11 +81,6 @@ export default function HomeScreen() {
 HomeScreen.navigationOptions = {
   header: null,
 };
-
-function createReminder() {
-  alert("Dummy create reminder");
-}
-
 
 
 // name on top, when and what in  the bottom
@@ -106,11 +95,6 @@ const reminderList = [
     subtitle: 'When | What',
     reminder_type: 'phone'
   }
-  // {
-  //   name: 'Monja',
-  //   subtitle: 'When | What',
-  //   reminder_type: 'slack'
-  // }
 ];
  
 

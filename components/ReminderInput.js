@@ -1,38 +1,32 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TextInput, Button } from 'react-native';
+import { View, Text, StyleSheet, TextInput, Button, Modal } from 'react-native';
 
 const ReminderInput = props => {
 
   const [enteredReminder, setEnteredReminder] = useState({
-  	reTitle: 'j',
-  	reDescription: 'b',
+  	title: '',
+  	description: '',
   });
- 
-  const printValues = e => {
-    e.preventDefault();
-    console.log(e);
-    console.log(enteredReminder.reTitle, enteredReminder.reDescription);
+
+  const addReminderHandler = () => {
+  	props.onAddReminder(enteredReminder);
+  	setEnteredReminder('');
   };
 
-  const reminderInputHanlder = e => {
-	setEnteredReminder({ 
-	  [e.target.name]: e.target.value
-	});
-  };
-
-	return ( 
-	<View>
+  return ( 
+	<Modal visible={props.visible} animationType='slide'>
+	<View style={styles.inputContainer}>
 		<TextInput
             style={styles.reminderInputField} 
             placeholder='Reminder Title'
             onChangeText={(text)=>{ 
               setEnteredReminder({ 
-                "reTitle": text,
-                "reDescription": enteredReminder.reDescription
+                "title": text,
+                "description": enteredReminder.description
               })
             }}
-            name="reTitle"
-            value={enteredReminder.reTitle}
+            name="title"
+            value={enteredReminder.title}
         />
         <TextInput
             style={styles.reminderInputField} 
@@ -40,26 +34,53 @@ const ReminderInput = props => {
             onChangeText={
               (text)=>{ 
                 setEnteredReminder({ 
-                  "reTitle": enteredReminder.reTitle,
-                  "reDescription": text
+                  "title": enteredReminder.title,
+                  "description": text
                 })
               }
             }
-            name="reDescription"
-            value={enteredReminder.reDescription}
+            name="description"
+            value={enteredReminder.description}
         />
-        <Button 
-        	title="Create Reminder" 
-        	onPress={props.onCreateReminder.bind(this, enteredReminder)} 
-        />
+	    <View style={styles.buttonContainer}>
+	    <View style={styles.button}>
+		    <Button 
+		    	title="CANCEL" color='red' 
+		    	onPress={props.onCancel}
+		    />
+	    </View>
+	    <View style={styles.button}>
+		    <Button 
+		    	title="ADD" 
+		    	onPress={addReminderHandler} 
+		    />
+	    </View>
+	    </View>
     </View>
+    </Modal>
   	);
 }
 
 const styles = StyleSheet.create({
   reminderInputField: {
+  	width: '80%',
     borderColor: 'black',
     borderWidth: 1,
+    padding: 10,
+    marginBottom: 10
+  },
+  inputContainer: {
+  	flex: 1,
+  	justifyContent: 'center',
+  	alignItems: 'center',
+  },
+  buttonContainer: {
+  	flexDirection: 'row',
+  	justifyContent: 'space-between',
+  	width: '60%',
+  },
+  button: {
+  	width: '40%',
   },
 });
 

@@ -1,10 +1,10 @@
 {
   "devToolsPort": 19002,
   "expoServerPort": 19000,
-  "packagerPort": 19003,
-  "packagerPid": 3370,
+  "packagerPort": 19001,
+  "packagerPid": 1498,
   "expoServerNgrokUrl": "https://ga-zkf.selen.text-my-friend-app.exp.direct",
   "packagerNgrokUrl": "https://packager.ga-zkf.selen.text-my-friend-app.exp.direct",
-  "ngrokPid": 2718,
+  "ngrokPid": 1572,
   "webpackServerPort": null
 }

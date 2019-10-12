@@ -4,8 +4,8 @@ import { View, Text, StyleSheet, TextInput, Button, Modal } from 'react-native';
 const ReminderInput = props => {
 
   const [enteredReminder, setEnteredReminder] = useState({
-  	title: '',
-  	description: '',
+  	title: props.title,
+  	description: props.description,
   });
 
   const addReminderHandler = () => {
@@ -16,9 +16,11 @@ const ReminderInput = props => {
   return ( 
 	<Modal visible={props.visible} animationType='slide'>
 	<View style={styles.inputContainer}>
+		<Text>Reminder Title</Text>
 		<TextInput
             style={styles.reminderInputField} 
-            placeholder='Reminder Title'
+            defaultValue={props.title}
+            placeholder={props.title}
             onChangeText={(text)=>{ 
               setEnteredReminder({ 
                 "title": text,
@@ -28,9 +30,11 @@ const ReminderInput = props => {
             name="title"
             value={enteredReminder.title}
         />
+		<Text>Reminder Description</Text>
         <TextInput
             style={styles.reminderInputField} 
-            placeholder='Reminder Description'
+            defaultValue={props.description}
+            placeholder={props.description}
             onChangeText={
               (text)=>{ 
                 setEnteredReminder({ 

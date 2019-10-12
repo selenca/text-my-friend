@@ -10,6 +10,7 @@ import {
   TouchableOpacity,
   View,
   FlatList,
+  Alert,
 } from 'react-native';
 import ReminderItem from '../components/ReminderItem';
 import ReminderInput from '../components/ReminderInput';
@@ -20,6 +21,10 @@ import { Card, List, ListItem, Button, Icon } from 'react-native-elements';
 export default function HomeScreen() {
   const [listReminders, setReminders] = useState([]);
   const [isAddMode, setIsAddMode] = useState(false);
+  const [editableReminder, setEditableReminder] = useState({
+    title: '',
+    description: '',
+  });
 
 
   const createReminderHandler = (reminder) => {
@@ -39,6 +44,37 @@ export default function HomeScreen() {
       return currentReminders.filter((reminder) => reminder.id !== reminderId);
     });
   }
+
+//TODO
+  const editReminderHandler = modifiedReminder => {
+    let newReminderObj = 
+    { 
+      title: modifiedReminder.title,
+      description: modifiedReminder.description 
+    };
+    setEditableReminder(newReminderObj);
+
+    console.log(editableReminder);
+    removeReminderHandler(modifiedReminder.id);
+    setIsAddMode(true);
+    return (<ReminderInput title={editableReminder.title} description={editableReminder.description} visible={isAddMode} onAddReminder={createReminderHandler} onCancel={cancelAddReminderHandler}/>);
+  }
+
+  const onPressHandler = (reminder) => {
+    Alert.alert(
+      reminder.title,
+      'Do you want to edit the reminder',
+      [
+        {
+          text: 'Edit',
+          onPress: () => editReminderHandler(reminder),
+          style: 'cancel',
+        },
+        {text: 'Delete', onPress: () => removeReminderHandler(reminder.id)},
+      ],
+      {cancelable: false},
+    );
+  };
 
   const cancelAddReminderHandler = () => {
     setIsAddMode(false);
@@ -64,7 +100,9 @@ export default function HomeScreen() {
                 id={itemData.item.id}
                 title={itemData.item.title}
                 description={itemData.item.description}
-                onDelete={removeReminderHandler} 
+                onPressHandler={onPressHandler}
+                onDelete={removeReminderHandler}
+                onEdit={editReminderHandler}
               />
             )}
           />

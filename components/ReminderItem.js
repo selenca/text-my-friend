@@ -4,7 +4,7 @@ import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 const ReminderItem = props => {
 	return ( 
 		<TouchableOpacity 
-			onPress={props.onDelete.bind(this, props.id)}
+			onPress={props.onPressHandler.bind(this, props)}
 			activeOpacity={0.8}
 		>
 			<View>

@@ -4,8 +4,8 @@ import { View, Text, StyleSheet, TextInput, Button, Modal } from 'react-native';
 const ReminderInput = props => {
 
   const [enteredReminder, setEnteredReminder] = useState({
-  	title: props.title,
-  	description: props.description,
+  	title: props.editableReminder.title,
+  	description: props.editableReminder.description,
   });
 
   const addReminderHandler = () => {
@@ -13,15 +13,26 @@ const ReminderInput = props => {
   	setEnteredReminder('');
   };
 
+  const setDefaults = () => {
+  	if (props.visible == true) {
+  	  setEnteredReminder({
+		title:props.editableReminder.title,
+	    description: props.editableReminder.description
+  	  })
+  	}
+  };
+
   return ( 
-	<Modal visible={props.visible} animationType='slide'>
+	<Modal visible={props.visible} animationType='slide' 
+	onShow={setDefaults}
+	>
 	<View style={styles.inputContainer}>
 		<Text>Reminder Title</Text>
 		<TextInput
             style={styles.reminderInputField} 
-            defaultValue={props.title}
-            placeholder={props.title}
-            onChangeText={(text)=>{ 
+            defaultValue={enteredReminder.title}
+            placeholder={enteredReminder.title}
+            onChangeText={(text)=>{
               setEnteredReminder({ 
                 "title": text,
                 "description": enteredReminder.description
@@ -33,8 +44,8 @@ const ReminderInput = props => {
 		<Text>Reminder Description</Text>
         <TextInput
             style={styles.reminderInputField} 
-            defaultValue={props.description}
-            placeholder={props.description}
+            defaultValue={enteredReminder.description}
+            placeholder={enteredReminder.description}
             onChangeText={
               (text)=>{ 
                 setEnteredReminder({ 

@@ -11,6 +11,7 @@ import {
   View,
   FlatList,
   Alert,
+  Clipboard,
 } from 'react-native';
 import ReminderItem from '../components/ReminderItem';
 import ReminderInput from '../components/ReminderInput';
@@ -25,7 +26,6 @@ export default function HomeScreen() {
     title: '',
     description: '',
   });
-
 
   const createReminderHandler = (reminder) => {
     setReminders(currentReminders => [
@@ -54,10 +54,8 @@ export default function HomeScreen() {
     };
     setEditableReminder(newReminderObj);
 
-    console.log(editableReminder);
     removeReminderHandler(modifiedReminder.id);
     setIsAddMode(true);
-    return (<ReminderInput title={editableReminder.title} description={editableReminder.description} visible={isAddMode} onAddReminder={createReminderHandler} onCancel={cancelAddReminderHandler}/>);
   }
 
   const onPressHandler = (reminder) => {
@@ -71,11 +69,16 @@ export default function HomeScreen() {
           style: 'cancel',
         },
         {text: 'Delete', onPress: () => removeReminderHandler(reminder.id)},
+        {text: 'Copy Description', onPress: () => copyToClipboard(reminder.description)}
       ],
       {cancelable: false},
     );
   };
 
+  const copyToClipboard = (description) => {
+    Clipboard.setString(description);
+  };
+  
   const cancelAddReminderHandler = () => {
     setIsAddMode(false);
   };
@@ -91,7 +94,7 @@ export default function HomeScreen() {
             Get started by typing a reminder title {"\n"}
           </Text>
           <Button title="Add new Reminder" onPress={() => setIsAddMode(true)} />
-          <ReminderInput visible={isAddMode} onAddReminder={createReminderHandler} onCancel={cancelAddReminderHandler}/>
+          <ReminderInput editableReminder={editableReminder} visible={isAddMode} onAddReminder={createReminderHandler} onCancel={cancelAddReminderHandler}/>
           <FlatList 
             keyExtractor={(item, index) => item.id}
             data ={listReminders}

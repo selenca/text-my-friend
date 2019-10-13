@@ -9,6 +9,11 @@
       "android",
       "web"
     ],
+    "android": {
+      "package": "com.textselenfried.myapp",
+      "permissions": [],
+      "icon": "./assets/images/icon.png"
+    },
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -21,7 +26,7 @@
       "fallbackToCacheTimeout": 0
     },
     "assetBundlePatterns": [
-      "**/*"
+       "assets/*"
     ],
     "ios": {
       "supportsTablet": true

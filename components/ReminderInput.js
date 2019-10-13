@@ -5,7 +5,7 @@ const ReminderInput = props => {
 
   const [enteredReminder, setEnteredReminder] = useState({
   	title: props.editableReminder.title,
-  	description: props.editableReminder.description,
+  	description: props.editableReminder.description
   });
 
   const addReminderHandler = () => {

@@ -13,6 +13,7 @@ import {
   Alert,
   Clipboard,
   Share,
+  AsyncStorage,
 } from 'react-native';
 import ReminderItem from '../components/ReminderItem';
 import ReminderInput from '../components/ReminderInput';
@@ -21,12 +22,39 @@ import { MonoText } from '../components/StyledText';
 import { Card, List, ListItem, Button, Icon } from 'react-native-elements';
 
 export default function HomeScreen() {
-  const [listReminders, setReminders] = useState([]);
+  const [listReminders, setReminders] = useState(() => {
+    return retrieveData;
+  });
   const [isAddMode, setIsAddMode] = useState(false);
   const [editableReminder, setEditableReminder] = useState({
+    id: '',                     
     title: '',
-    description: '',
+    description: '', 
   });
+
+
+      // fetch the data back asyncronously
+  const retrieveData = async () => {
+      try {
+          const value = await AsyncStorage.getItem('savedReminders');
+          console.log(value);
+          if (value !== null) {
+              // Our data is fetched successfully
+              return value;
+          }
+      } catch (error) {
+        console.log('returning undefined');
+        return undefined;
+      }
+  };
+
+  const storeData = async () => {
+    try {
+      await AsyncStorage.setItem('savedReminders', listReminders);
+    } catch (error) {
+      // Error saving data
+    }
+  };
 
   const createReminderHandler = (reminder) => {
     setReminders(currentReminders => [
@@ -37,6 +65,7 @@ export default function HomeScreen() {
         description: reminder.description
       }
     ]);
+    //storeData();
     setIsAddMode(false);
   };
 
@@ -44,6 +73,7 @@ export default function HomeScreen() {
     setReminders(currentReminders => {
       return currentReminders.filter((reminder) => reminder.id !== reminderId);
     });
+    //storeData();
   }
 
   const editReminderHandler = modifiedReminder => {
@@ -53,7 +83,6 @@ export default function HomeScreen() {
       description: modifiedReminder.description 
     };
     setEditableReminder(newReminderObj);
-
     removeReminderHandler(modifiedReminder.id);
     setIsAddMode(true);
   }
@@ -105,6 +134,8 @@ export default function HomeScreen() {
     }
   };
 
+
+
   return (
     <View style={styles.container}>
       <ScrollView
@@ -126,8 +157,6 @@ export default function HomeScreen() {
                 title={itemData.item.title}
                 description={itemData.item.description}
                 onPressHandler={onPressHandler}
-                onDelete={removeReminderHandler}
-                onEdit={editReminderHandler}
               />
             )}
           />

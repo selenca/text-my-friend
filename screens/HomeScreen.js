@@ -12,6 +12,7 @@ import {
   FlatList,
   Alert,
   Clipboard,
+  Share,
 } from 'react-native';
 import ReminderItem from '../components/ReminderItem';
 import ReminderInput from '../components/ReminderInput';
@@ -45,7 +46,6 @@ export default function HomeScreen() {
     });
   }
 
-//TODO
   const editReminderHandler = modifiedReminder => {
     let newReminderObj = 
     { 
@@ -60,18 +60,19 @@ export default function HomeScreen() {
 
   const onPressHandler = (reminder) => {
     Alert.alert(
-      reminder.title,
-      'Do you want to edit the reminder',
+      'Reminder Details',
+      'What would you like to do with the reminder '+reminder.title,
       [
         {
           text: 'Edit',
           onPress: () => editReminderHandler(reminder),
           style: 'cancel',
         },
-        {text: 'Delete', onPress: () => removeReminderHandler(reminder.id)},
-        {text: 'Copy Description', onPress: () => copyToClipboard(reminder.description)}
+        //{text: 'Delete', onPress: () => removeReminderHandler(reminder.id)},
+        {text: 'Copy Description', onPress: () => copyToClipboard(reminder.description)},
+        {text: 'Share', onPress: () => onShare(reminder.description)}
       ],
-      {cancelable: false},
+      {cancelable: true},
     );
   };
 
@@ -83,6 +84,27 @@ export default function HomeScreen() {
     setIsAddMode(false);
   };
 
+  onShare = async (textToShare) => {
+    console.log(textToShare);
+    try {
+      const result = await Share.share({
+        message: textToShare,
+      });
+
+      if (result.action === Share.sharedAction) {
+        if (result.activityType) {
+          // shared with activity type of result.activityType
+        } else {
+          // shared
+        }
+      } else if (result.action === Share.dismissedAction) {
+        // dismissed
+      }
+    } catch (error) {
+      alert(error.message);
+    }
+  };
+
   return (
     <View style={styles.container}>
       <ScrollView
@@ -91,7 +113,7 @@ export default function HomeScreen() {
         <View style={styles.getStartedContainer}>
 
           <Text style={styles.getStartedText}>
-            Get started by typing a reminder title {"\n"}
+            Add a Reminder by pressing the button below
           </Text>
           <Button title="Add new Reminder" onPress={() => setIsAddMode(true)} />
           <ReminderInput editableReminder={editableReminder} visible={isAddMode} onAddReminder={createReminderHandler} onCancel={cancelAddReminderHandler}/>
@@ -109,10 +131,6 @@ export default function HomeScreen() {
               />
             )}
           />
-          <Text style={styles.getStartedText}>
-            {"\n"} Below you will see the reminders sorted by date
-          </Text>
-          <RenderReminderList />
         </View>
       </ScrollView>
     </View>

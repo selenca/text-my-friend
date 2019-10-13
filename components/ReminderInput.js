@@ -60,13 +60,13 @@ const ReminderInput = props => {
 	    <View style={styles.buttonContainer}>
 	    <View style={styles.button}>
 		    <Button 
-		    	title="CANCEL" color='red' 
+		    	title="DELETE" color='red' 
 		    	onPress={props.onCancel}
 		    />
 	    </View>
 	    <View style={styles.button}>
 		    <Button 
-		    	title="ADD" 
+		    	title="SAVE" 
 		    	onPress={addReminderHandler} 
 		    />
 	    </View>
